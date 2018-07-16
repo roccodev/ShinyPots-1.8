@@ -2,38 +2,50 @@ package tk.roccodev.shinypots.coremod;
 
 import net.minecraft.launchwrapper.ITweaker;
 import net.minecraft.launchwrapper.LaunchClassLoader;
+import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 import org.spongepowered.asm.launch.MixinBootstrap;
 import org.spongepowered.asm.mixin.MixinEnvironment;
 import org.spongepowered.asm.mixin.Mixins;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by roccodev on 16/07/18.
  */
-public class ShinyPotsTweaker implements ITweaker {
-    @Override
-    public void acceptOptions(List<String> args, File gameDir, File assetsDir, String profile) {
+public class ShinyPotsTweaker implements IFMLLoadingPlugin {
 
-    }
-
-    @Override
-    public void injectIntoClassLoader(LaunchClassLoader classLoader) {
+    public ShinyPotsTweaker() {
 
         MixinBootstrap.init();
-        MixinEnvironment env = MixinEnvironment.getDefaultEnvironment();
         Mixins.addConfiguration("mixins.shinypots.json");
 
     }
 
+
     @Override
-    public String getLaunchTarget() {
-        return "net.minecraft.client.main.Main";
+    public String[] getASMTransformerClass() {
+        return new String[0];
     }
 
     @Override
-    public String[] getLaunchArguments() {
-        return new String[0];
+    public String getModContainerClass() {
+        return null;
+    }
+
+    @Override
+    public String getSetupClass() {
+        return null;
+    }
+
+    @Override
+    public void injectData(Map<String, Object> data) {
+
+    }
+
+    @Override
+    public String getAccessTransformerClass() {
+        return null;
     }
 }
