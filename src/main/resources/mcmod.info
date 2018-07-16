@@ -1,0 +1,16 @@
+[
+{
+  "modid": "shinypots-1.8",
+  "name": "ShinyPots",
+  "description": "Adds a shiny effects to potions in your inventory.",
+  "version": "1.0",
+  "mcversion": "1.8.9",
+  "url": "https://roccodev.pw/mods/shinypots",
+  "updateUrl": "",
+  "authorList": ["RoccoDev"],
+  "credits": "Hyperium Client, for the 'shiny' values",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

@@ -1,0 +1,11 @@
+{
+    "package": "tk.roccodev.shinypots.mixin",
+    "refmap": "mixins.shinypots.refmap.json",
+    "target": "@env(DEFAULT)",
+    "compatibilityLevel": "JAVA_8",
+    "mixins": [
+        "MixinShinyPots",
+        "IMixinShinyPots",
+      "IMixinShinyPots2"
+    ]
+}
