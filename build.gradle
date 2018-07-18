@@ -7,19 +7,14 @@ buildscript {
             name = "forge"
             url = "http://files.minecraftforge.net/maven"
         }
-        maven {
-            name = 'sponge'
-            url = 'https://repo.spongepowered.org/maven'
-        }
+
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT'
-        classpath 'org.spongepowered:mixingradle:0.4-SNAPSHOT'
     }
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'idea'
-apply plugin: 'org.spongepowered.mixin'
 
 
 configurations {
@@ -33,18 +28,9 @@ plugins {
     id "net.minecraftforge.gradle.forge" version "2.0.2"
 }
 */
-version = "1.0"
+version = "1.1"
 group= "tk.roccodev.shinypots" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "ShinyPots-1.8"
-
-repositories {
-
-    maven {
-        name = 'sponge'
-        url = 'https://repo.spongepowered.org/maven/'
-    }
-
-}
 
 
 dependencies {
@@ -57,7 +43,6 @@ dependencies {
     //compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
     //compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
 
-    shade 'org.spongepowered:mixin:0.7.7-SNAPSHOT'
 
     // the 'provided' configuration is for optional dependencies that exist at compile-time but might not at runtime.
     //provided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
@@ -73,29 +58,12 @@ dependencies {
 
 
 }
-    sourceSets {
-    main {
-        refMap = "mixins.shinypots.refmap.json"
-    }
-}
-jar {
-    manifest.attributes(
-            'TweakClass': 'org.spongepowered.asm.launch.MixinTweaker',
-            'MixinConfigs': 'mixins.shinypots.json',
-            'FMLCorePlugin': 'tk.roccodev.shinypots.coremod.ShinyPotsTweaker',
-            'FMLCorePluginContainsFMLMod': 'true',
-    )
-    configurations.shade.each { dep ->
-        from(project.zipTree(dep)){
-            exclude 'com/google/**', 'com/google', 'org/apache/**', 'org/apache'
-        }
-    }
-}
+
+
 
 minecraft {
     version = "1.8.9-11.15.1.1722"
     runDir = "run"
-    coreMod = 'tk.roccodev.shinypots.coremod.ShinyPotsTweaker'
     
     // the mappings can be changed at any time, and must be in the following format.
     // snapshot_YYYYMMDD   snapshot are built nightly.
