@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.client.resources.model.IBakedModel;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemPotion;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -25,6 +26,16 @@ public class CustomItem {
         this.parent = parent;
     }
 
+    private int getPotionColor(ItemStack item) {
+        // First we get the cached potion color
+        int color = Items.potionitem.getColorFromItemStack(item, 0);
+
+        // The color is a RGB hex int, we have to convert it to the glint format first.
+        int red = (((color >> 16) & 0xFF) << 16) & 0x00FF0000;
+        int green = (((color >> 8) & 0xFF) << 8) & 0x0000FF00;
+        int blue = color & 0xFF;
+        return 0xFF000000 | red | green | blue;
+    }
 
 
     public void renderItemIntoGUI(ItemStack stack, int x, int y) {
@@ -77,7 +88,7 @@ public class CustomItem {
 
 
                 if (isInv && stack.getItem() != null && stack.getItem() instanceof ItemPotion) {
-                    renderPot(model);
+                    renderPot(model, getPotionColor(stack));
 
                     renderedAsPotion = true;
                 }
@@ -89,7 +100,7 @@ public class CustomItem {
 
 
                 if (!renderedAsPotion && stack.hasEffect()) {
-                    this.renderEffect(model);
+                    this.renderEffect(model, getPotionColor(stack));
                 }
 
             }
@@ -103,7 +114,7 @@ public class CustomItem {
      *
      * @param model the model
      */
-    public void renderPot(IBakedModel model) {
+    public void renderPot(IBakedModel model, int color) {
         GlStateManager.depthMask(false);
         GlStateManager.disableLighting();
         GlStateManager.blendFunc(768, 1);
@@ -114,14 +125,14 @@ public class CustomItem {
         float f = (float) (Minecraft.getSystemTime() % 3000L) / 3000.0F / 8.0F;
         GlStateManager.translate(f, 0.0F, 0.0F);
         GlStateManager.rotate(-50.0F, 0.0F, 0.0F, 1.0F);
-        ((CustomRenderItem) parent).callRenderModel(model, -8372020);
+        ((CustomRenderItem) parent).callRenderModel(model, color);
         GlStateManager.popMatrix();
         GlStateManager.pushMatrix();
         GlStateManager.scale(8.0F, 8.0F, 8.0F);
         float f1 = (float) (Minecraft.getSystemTime() % 4873L) / 4873.0F / 8.0F;
         GlStateManager.translate(-f1, 0.0F, 0.0F);
         GlStateManager.rotate(10.0F, 0.0F, 0.0F, 1.0F);
-        ((CustomRenderItem) parent).callRenderModel(model, -8372020);
+        ((CustomRenderItem) parent).callRenderModel(model, color);
         GlStateManager.popMatrix();
         GlStateManager.matrixMode(5888);
         GlStateManager.blendFunc(770, 771);
@@ -136,7 +147,7 @@ public class CustomItem {
      *
      * @param model the model of the item
      */
-    private void renderEffect(IBakedModel model) {
+    private void renderEffect(IBakedModel model, int color) {
         GlStateManager.depthMask(false);
         GlStateManager.depthFunc(514);
         GlStateManager.disableLighting();
@@ -148,14 +159,14 @@ public class CustomItem {
         float f = (float)(Minecraft.getSystemTime() % 3000L) / 3000.0F / 8.0F;
         GlStateManager.translate(f, 0.0F, 0.0F);
         GlStateManager.rotate(-50.0F, 0.0F, 0.0F, 1.0F);
-        ((CustomRenderItem)parent).callRenderModel(model, -8372020);
+        ((CustomRenderItem)parent).callRenderModel(model, color);
         GlStateManager.popMatrix();
         GlStateManager.pushMatrix();
         GlStateManager.scale(8.0F, 8.0F, 8.0F);
         float f1 = (float)(Minecraft.getSystemTime() % 4873L) / 4873.0F / 8.0F;
         GlStateManager.translate(-f1, 0.0F, 0.0F);
         GlStateManager.rotate(10.0F, 0.0F, 0.0F, 1.0F);
-        ((CustomRenderItem)parent).callRenderModel(model, -8372020);
+        ((CustomRenderItem)parent).callRenderModel(model, color);
         GlStateManager.popMatrix();
         GlStateManager.matrixMode(5888);
         GlStateManager.blendFunc(770, 771);
@@ -167,3 +178,4 @@ public class CustomItem {
 
 
 }
+
