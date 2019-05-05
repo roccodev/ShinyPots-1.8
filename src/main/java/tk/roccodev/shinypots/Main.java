@@ -20,6 +20,8 @@ import java.lang.reflect.InvocationTargetException;
 public class Main {
 
     public static Mode mode = Mode.NORMAL;
+    public static Property modeProperty;
+
     @Mod.Instance
     public static Main instance;
     private Configuration config;
@@ -71,8 +73,8 @@ public class Main {
     private void loadConfig() {
         config.load();
 
-        Property mode = config.get(Configuration.CATEGORY_GENERAL, "mode", 1, "The mode");
-        Main.mode = Mode.values()[mode.getInt(1)];
+        modeProperty = config.get(Configuration.CATEGORY_GENERAL, "mode", 1, "The mode");
+        Main.mode = Mode.values()[modeProperty.getInt(1)];
     }
 
     void saveConfig() {

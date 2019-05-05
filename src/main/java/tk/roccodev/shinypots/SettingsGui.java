@@ -47,6 +47,7 @@ public class SettingsGui extends GuiScreen {
                     Main.mode = Mode.DISABLED;
                     break;
             }
+            Main.modeProperty.set(Main.mode.ordinal());
             button.displayString = "Mode: " + Main.mode.getDisplay();
         }
         super.actionPerformed(button);
