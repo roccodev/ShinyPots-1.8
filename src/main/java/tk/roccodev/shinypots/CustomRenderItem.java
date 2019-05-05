@@ -1,9 +1,6 @@
 package tk.roccodev.shinypots;
 
-import net.minecraft.client.renderer.EntityRenderer;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.texture.TextureManager;
@@ -13,10 +10,14 @@ import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import org.lwjgl.opengl.GL11;
 import tk.roccodev.shinypots.CustomItem;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by roccodev on 18/07/18.
@@ -24,6 +25,7 @@ import java.util.List;
 public class CustomRenderItem extends RenderItem implements IResourceManagerReloadListener {
 
     private TextureManager tm;
+    private HashMap<Integer, Integer> renderCache = new HashMap<>();
 
     public CustomRenderItem(TextureManager textureManager, ModelManager modelManager) {
         super(textureManager, modelManager);
@@ -36,7 +38,6 @@ public class CustomRenderItem extends RenderItem implements IResourceManagerRelo
     public void renderItemIntoGUI(ItemStack stack, int x, int y) {
       item.renderItemIntoGUI(stack, x, y);
     }
-
 
 
     public TextureManager getTextureManager() {
@@ -78,7 +79,7 @@ public class CustomRenderItem extends RenderItem implements IResourceManagerRelo
     }
 
 
-    private void renderQuads(WorldRenderer renderer, List<BakedQuad> quads, int color, ItemStack stack) {
+    public void callRenderQuads(WorldRenderer renderer, List<BakedQuad> quads, int color, ItemStack stack) {
         boolean flag = color == -1 && stack != null;
         int i = 0;
 
@@ -101,24 +102,41 @@ public class CustomRenderItem extends RenderItem implements IResourceManagerRelo
 
     }
 
-
-
-
-
-
-
     private void renderModel(IBakedModel model2, int color, ItemStack e1) {
+        int hashValue;
+        int hash;
+        {
+            String name = e1 != null ? e1.getUnlocalizedName() : "";
+            int dmg = e1 != null ? e1.getItemDamage() : 0;
+            int meta = e1 != null ? e1.getMetadata() : 0;
+            NBTTagCompound tags = e1 != null ? e1.getTagCompound() : null;
+
+            hash = Objects.hash(model2, color, name, dmg, meta, tags);
+        }
+        Integer cached = renderCache.get(hash);
+        if(cached != null) {
+            GlStateManager.callList(cached);
+            GlStateManager.resetColor();
+            return;
+        }
+
+        hashValue = GLAllocation.generateDisplayLists(1);
+        GL11.glNewList(hashValue, GL11.GL_COMPILE_AND_EXECUTE);
+
         Tessellator tessellator = Tessellator.getInstance();
         WorldRenderer worldrenderer = tessellator.getWorldRenderer();
         worldrenderer.begin(7, DefaultVertexFormats.ITEM);
 
         for (EnumFacing enumfacing : EnumFacing.values())
         {
-            this.renderQuads(worldrenderer, model2.getFaceQuads(enumfacing), color, e1);
+            this.callRenderQuads(worldrenderer, model2.getFaceQuads(enumfacing), color, e1);
         }
 
-        this.renderQuads(worldrenderer, model2.getGeneralQuads(), color, e1);
+        this.callRenderQuads(worldrenderer, model2.getGeneralQuads(), color, e1);
         tessellator.draw();
+
+        GL11.glEndList();
+        renderCache.put(hash, hashValue);
     }
 
 }
