@@ -48,7 +48,7 @@ public class SettingsGui extends GuiScreen {
                     break;
             }
             Main.modeProperty.set(Main.mode.ordinal());
-            button.displayString = "Mode: " + Main.mode.getDisplay();
+            button.displayString = "Shiny Pots: " + Main.mode.getDisplay();
         }
         super.actionPerformed(button);
     }
