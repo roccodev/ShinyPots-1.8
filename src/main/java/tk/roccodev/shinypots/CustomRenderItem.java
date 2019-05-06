@@ -32,13 +32,12 @@ public class CustomRenderItem extends RenderItem implements IResourceManagerRelo
         tm = textureManager;
     }
 
-    private CustomItem item = new CustomItem((RenderItem) (Object) this);
+    private CustomItem item = new CustomItem(this);
 
     @Override
     public void renderItemIntoGUI(ItemStack stack, int x, int y) {
-      item.renderItemIntoGUI(stack, x, y);
+        item.renderItemIntoGUI(stack, x, y);
     }
-
 
     public TextureManager getTextureManager() {
         return tm;
@@ -84,7 +83,7 @@ public class CustomRenderItem extends RenderItem implements IResourceManagerRelo
         int i = 0;
 
         for (int j = quads.size(); i < j; ++i) {
-            BakedQuad bakedquad = (BakedQuad) quads.get(i);
+            BakedQuad bakedquad = quads.get(i);
             int k = color;
 
             if (flag && bakedquad.hasTintIndex()) {
